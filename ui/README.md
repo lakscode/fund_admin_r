@@ -1,16 +1,66 @@
-# React + Vite
+# Fund Admin UI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + TypeScript frontend built with Vite.
 
-Currently, two official plugins are available:
+## Environment Configuration
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+All environment-specific settings are defined in a single file:
 
-## React Compiler
+```
+src/config/constants.ts
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### How it works
 
-## Expanding the ESLint configuration
+Vite sets `import.meta.env.MODE` automatically based on how the app is started:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+| Command | Mode | `import.meta.env.MODE` |
+|---|---|---|
+| `vite` (dev server) | development | `"development"` |
+| `vite --mode test` | test | `"test"` |
+| `vite build` | production | `"production"` |
+| `vite build --mode test` | test | `"test"` |
+
+The `constants.ts` file reads this mode and selects the matching config:
+
+```typescript
+const ENV: Environment = (import.meta.env.MODE as Environment) || 'development';
+```
+
+### Config values per environment
+
+| Setting | Development | Test | Production |
+|---|---|---|---|
+| `API_URL` | `http://localhost:5000` | `http://localhost:5001` | `https://api.fundadmin.com` |
+| `APP_TITLE` | Fund Admin (Dev) | Fund Admin (Test) | Fund Admin |
+
+### Usage in code
+
+```typescript
+import { API_URL, APP_TITLE, IS_DEV } from '../config/constants';
+
+fetch(`${API_URL}/api/endpoint`);
+```
+
+### Running in different modes
+
+```bash
+# Development (default)
+npm run dev
+
+# Test mode
+npx vite --mode test
+
+# Production build
+npm run build
+
+# Production build with test config
+npx vite build --mode test
+```
+
+## Scripts
+
+- `npm run dev` — Start dev server
+- `npm run build` — Type check + production build
+- `npm run preview` — Preview production build locally
+- `npm run type-check` — Run TypeScript type checking

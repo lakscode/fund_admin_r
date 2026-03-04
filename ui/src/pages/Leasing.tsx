@@ -7,8 +7,8 @@ import './Leasing.css';
 
 const { page, tabs, kpiCards, chartData, actionQueue } = leasingData;
 
-function KpiIcon({ type }) {
-  const props = { width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: '#8b8ba3', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' };
+function KpiIcon({ type }: { type: string }) {
+  const props = { width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: '#8b8ba3', strokeWidth: 2, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
   switch (type) {
     case 'clock':
       return <svg {...props}><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>;
@@ -23,8 +23,8 @@ function KpiIcon({ type }) {
   }
 }
 
-function ActionIcon({ type, color }) {
-  const props = { width: 20, height: 20, viewBox: '0 0 24 24', fill: 'none', stroke: color, strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' };
+function ActionIcon({ type, color }: { type: string; color: string }) {
+  const props = { width: 20, height: 20, viewBox: '0 0 24 24', fill: 'none', stroke: color, strokeWidth: 2, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
   switch (type) {
     case 'warning':
       return <svg {...props}><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>;

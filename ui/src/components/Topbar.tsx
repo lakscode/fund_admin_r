@@ -1,7 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-function Topbar({ title, showLive = true, onMenuToggle }) {
+interface TopbarProps {
+  title: string;
+  showLive?: boolean;
+  onMenuToggle?: () => void;
+}
+
+function Topbar({ title, showLive = true, onMenuToggle }: TopbarProps) {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
@@ -23,8 +29,8 @@ function Topbar({ title, showLive = true, onMenuToggle }) {
     <header className="topbar">
       <div className="topbar-left">
          {onMenuToggle && (
-          <button 
-            className="mobile-menu-btn" 
+          <button
+            className="mobile-menu-btn"
             onClick={onMenuToggle}
             aria-label="Toggle navigation menu"
           >

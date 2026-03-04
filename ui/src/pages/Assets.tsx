@@ -8,8 +8,8 @@ import './Assets.css';
 const { page, properties, pagination, filters, summaryCards } = assetsData;
 const TOTAL_PAGES = Math.ceil(pagination.totalItems / pagination.itemsPerPage);
 
-function SummaryIcon({ type, color }) {
-  const props = { width: 22, height: 22, viewBox: '0 0 24 24', fill: 'none', stroke: color, strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' };
+function SummaryIcon({ type, color }: { type: string; color: string }) {
+  const props = { width: 22, height: 22, viewBox: '0 0 24 24', fill: 'none', stroke: color, strokeWidth: 2, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
   switch (type) {
     case 'trend':
       return <svg {...props}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" /></svg>;

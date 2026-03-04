@@ -2,11 +2,33 @@ import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
 import landingFallback from '../data/landing.json';
+import { API_URL } from '../config/constants';
 import '../components/Layout.css';
 import './Landing.css';
 
+interface AssetRanking {
+  name: string;
+  risk: string;
+  ytd?: string;
+  occupancy?: string;
+  wale?: string;
+  marketValue?: string;
+  city?: string;
+  province?: string;
+}
+
+interface LandingData {
+  page: { title: string; subtitle: string };
+  kpiRow1: { label: string; value: string; change: string; changeType: string; tags: string[]; accent: string }[];
+  kpiRow2: { label: string; value: string; sub: string; tag: string; negative: boolean }[];
+  returns: { period: string; val1: string; val2: string }[];
+  tabs: string[];
+  assetRankings: AssetRanking[];
+  actionQueue: { status: string; statusColor: string; time: string; title: string; hasLink: boolean }[];
+}
+
 function Landing() {
-  const [data, setData] = useState(landingFallback);
+  const [data, setData] = useState<LandingData>(landingFallback);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(landingFallback.tabs[0]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -15,7 +37,7 @@ function Landing() {
   const closeSidebar = () => setSidebarOpen(false);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/command-center')
+    fetch(`${API_URL}/api/command-center`)
       .then((res) => {
         if (!res.ok) throw new Error('API unavailable');
         return res.json();
@@ -40,7 +62,19 @@ function Landing() {
         <div className="dashboard-main">
           <Topbar title="Command Center" onMenuToggle={toggleSidebar} />
           <div className="dashboard-content">
-            <p className="dashboard-subtitle">Loading dashboard data...</p>
+            <div className="loading-overlay">
+              <svg className="loading-spinner" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="12" y1="2" x2="12" y2="6" />
+                <line x1="12" y1="18" x2="12" y2="22" />
+                <line x1="4.93" y1="4.93" x2="7.76" y2="7.76" />
+                <line x1="16.24" y1="16.24" x2="19.07" y2="19.07" />
+                <line x1="2" y1="12" x2="6" y2="12" />
+                <line x1="18" y1="12" x2="22" y2="12" />
+                <line x1="4.93" y1="19.07" x2="7.76" y2="16.24" />
+                <line x1="16.24" y1="7.76" x2="19.07" y2="4.93" />
+              </svg>
+              <p className="loading-text">Loading dashboard data...</p>
+            </div>
           </div>
         </div>
       </div>

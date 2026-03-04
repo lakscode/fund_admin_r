@@ -1,3 +1,30 @@
+/* ===== Loading Overlay ===== */
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1.25rem;
+}
+
+.loading-spinner {
+  color: #1a1a2e;
+  animation: spin 1.2s linear infinite;
+}
+
+.loading-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #8b8ba3;
+  margin: 0;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 /* ===== Content ===== */
 .dashboard-content {
   padding: 1.5rem 2rem 2rem;
