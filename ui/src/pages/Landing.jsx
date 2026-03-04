@@ -1,14 +1,47 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
-import landingData from '../data/landing.json';
+import landingFallback from '../data/landing.json';
 import '../components/Layout.css';
 import './Landing.css';
 
-const { page, kpiRow1, kpiRow2, returns, tabs, assetRankings, actionQueue } = landingData;
-
 function Landing() {
-  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [data, setData] = useState(landingFallback);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState(landingFallback.tabs[0]);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/command-center')
+      .then((res) => {
+        if (!res.ok) throw new Error('API unavailable');
+        return res.json();
+      })
+      .then((apiData) => {
+        setData(apiData);
+        setActiveTab(apiData.tabs?.[0] || landingFallback.tabs[0]);
+      })
+      .catch(() => {
+        // Fall back to static JSON if API is down
+        setData(landingFallback);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  const { page, kpiRow1, kpiRow2, returns, tabs, assetRankings, actionQueue } = data;
+
+  if (loading) {
+    return (
+      <div className="dashboard-layout">
+        <Sidebar />
+        <div className="dashboard-main">
+          <Topbar title="Command Center" />
+          <div className="dashboard-content">
+            <p className="dashboard-subtitle">Loading dashboard data...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard-layout">
@@ -77,9 +110,9 @@ function Landing() {
                 <thead>
                   <tr>
                     <th>ASSET NAME</th>
-                    <th>YTD YIELD</th>
-                    <th>OCCUPANCY</th>
-                    <th>WALE</th>
+                    <th>MARKET VALUE</th>
+                    <th>CITY</th>
+                    <th>PROVINCE</th>
                     <th>RISK SCORE</th>
                   </tr>
                 </thead>
@@ -87,9 +120,9 @@ function Landing() {
                   {assetRankings.map((a) => (
                     <tr key={a.name}>
                       <td className="asset-name">{a.name}</td>
-                      <td className="asset-ytd">{a.ytd}</td>
-                      <td>{a.occupancy}</td>
-                      <td>{a.wale}</td>
+                      <td className="asset-ytd">{a.marketValue || a.ytd}</td>
+                      <td>{a.city || a.occupancy}</td>
+                      <td>{a.province || a.wale}</td>
                       <td>
                         <span className={`risk-badge ${a.risk.toLowerCase()}`}>{a.risk}</span>
                       </td>

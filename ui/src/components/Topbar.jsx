@@ -1,14 +1,23 @@
 import { useNavigate } from 'react-router-dom';
-import sidebarData from '../data/sidebar.json';
-
-const { user } = sidebarData;
+import { useAuth } from '../context/AuthContext';
 
 function Topbar({ title, showLive = true }) {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   const handleLogout = () => {
+    logout();
     navigate('/login');
   };
+
+  const displayName = user?.name || 'User';
+  const displayRole = user?.role || '';
+  const initials = displayName
+    .split(' ')
+    .map((w) => w[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
 
   return (
     <header className="topbar">
@@ -29,10 +38,10 @@ function Topbar({ title, showLive = true }) {
         </button>
         <div className="topbar-user">
           <div className="topbar-user-info">
-            <span className="topbar-user-name">{user.name}</span>
-            <span className="topbar-user-role">{user.role}</span>
+            <span className="topbar-user-name">{displayName}</span>
+            <span className="topbar-user-role">{displayRole}</span>
           </div>
-          <div className="topbar-avatar">{user.initials}</div>
+          <div className="topbar-avatar">{initials}</div>
         </div>
         <button className="topbar-logout-btn" onClick={handleLogout}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

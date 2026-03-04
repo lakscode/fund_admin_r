@@ -1,0 +1,5 @@
+alex.ferguson@contractio.com	password123	Portfolio Manager
+sarah.chen@contractio.com	password123	Fund Accountant
+james.wilson@contractio.com	password123	Asset Manager
+maria.lopez@contractio.com	password123	Compliance Officer
+admin@contractio.com	admin123	Administrator
