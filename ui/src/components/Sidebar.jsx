@@ -21,9 +21,17 @@ function NavIcon({ name }) {
   );
 }
 
-function Sidebar() {
+function Sidebar({ isOpen, onClose }) {
   return (
-    <aside className="sidebar">
+    <>
+      {isOpen && (
+        <div 
+          className="sidebar-backdrop open" 
+          onClick={onClose}
+          aria-hidden="true"
+        />
+      )}
+      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
       <div className="sidebar-top">
         <div className="sidebar-logo">
           <span className="logo-icon">{brand.logoIcon}</span>
@@ -67,6 +75,7 @@ function Sidebar() {
         ))}
       </div>
     </aside>
+    </>
   );
 }
 

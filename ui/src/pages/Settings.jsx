@@ -9,6 +9,10 @@ const { page, chartOfAccounts } = settingsData;
 
 function Settings() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+  const closeSidebar = () => setSidebarOpen(false);
 
   const { accounts, totalItems, itemsPerPage, title, description } = chartOfAccounts;
   const mappedCount = accounts.filter((a) => a.status === 'mapped').length;
@@ -17,9 +21,9 @@ function Settings() {
 
   return (
     <div className="dashboard-layout">
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
       <div className="dashboard-main">
-        <Topbar title={page.title} showLive={false} />
+        <Topbar title={page.title} showLive={false} onMenuToggle={toggleSidebar} />
 
         <div className="settings-content">
           <p className="settings-subtitle">{page.subtitle}</p>

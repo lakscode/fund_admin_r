@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-function Topbar({ title, showLive = true }) {
+function Topbar({ title, showLive = true, onMenuToggle }) {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
@@ -22,6 +22,19 @@ function Topbar({ title, showLive = true }) {
   return (
     <header className="topbar">
       <div className="topbar-left">
+         {onMenuToggle && (
+          <button 
+            className="mobile-menu-btn" 
+            onClick={onMenuToggle}
+            aria-label="Toggle navigation menu"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+        )}
         <h1 className="topbar-title">{title}</h1>
         {showLive && <span className="live-badge">LIVE</span>}
       </div>

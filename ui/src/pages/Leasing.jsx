@@ -39,14 +39,18 @@ function ActionIcon({ type, color }) {
 
 function Leasing() {
   const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+  const closeSidebar = () => setSidebarOpen(false);
 
   const maxBarHeight = Math.max(...chartData.map((d) => d.renewed + d.potential));
 
   return (
     <div className="dashboard-layout">
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
       <div className="dashboard-main">
-        <Topbar title={page.title} />
+        <Topbar title={page.title} onMenuToggle={toggleSidebar} />
 
         <div className="leasing-content">
           <p className="leasing-subtitle">{page.subtitle}</p>

@@ -3,6 +3,18 @@
   padding: 1.5rem 2rem 2rem;
 }
 
+@media (max-width: 768px) {
+  .settings-content {
+    padding: 1rem 1rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .settings-content {
+    padding: 0.75rem 0.75rem 1rem;
+  }
+}
+
 .settings-subtitle {
   color: #8b8ba3;
   font-size: 0.9rem;
@@ -17,11 +29,32 @@
   padding: 1.75rem 2rem;
 }
 
+@media (max-width: 768px) {
+  .coa-card {
+    padding: 1.25rem 1.25rem;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .coa-card {
+    padding: 1rem 1rem;
+  }
+}
+
 .coa-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .coa-header {
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
 }
 
 .coa-header-text {

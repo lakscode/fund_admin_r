@@ -3,6 +3,18 @@
   padding: 1.5rem 2rem 2rem;
 }
 
+@media (max-width: 768px) {
+  .assets-content {
+    padding: 1rem 1rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .assets-content {
+    padding: 0.75rem 0.75rem 1rem;
+  }
+}
+
 .assets-subtitle {
   color: #8b8ba3;
   font-size: 0.9rem;
@@ -17,10 +29,40 @@
   margin-bottom: 1.25rem;
 }
 
+@media (max-width: 768px) {
+  .assets-filter-bar {
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .assets-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+}
+
 .assets-search-wrap {
   position: relative;
   flex: 1;
   max-width: 360px;
+}
+
+@media (max-width: 768px) {
+  .assets-search-wrap {
+    max-width: 100%;
+    flex: 1;
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .assets-search-wrap {
+    max-width: none;
+  }
 }
 
 .assets-search-icon {
@@ -117,6 +159,13 @@
   padding: 0;
   overflow: hidden;
   margin-bottom: 1.25rem;
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  .assets-table-card {
+    box-shadow: 0 0 0 1px #e8e8ee;
+  }
 }
 
 .ap-table {
@@ -135,12 +184,40 @@
   white-space: nowrap;
 }
 
+@media (max-width: 768px) {
+  .ap-table thead th {
+    font-size: 0.58rem;
+    padding: 0.75rem 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ap-table thead th {
+    font-size: 0.55rem;
+    padding: 0.6rem 0.6rem;
+  }
+}
+
 .ap-table tbody td {
   padding: 1rem 0.85rem;
   font-size: 0.85rem;
   color: #555;
   border-bottom: 1px solid #f3f3f6;
   vertical-align: middle;
+}
+
+@media (max-width: 768px) {
+  .ap-table tbody td {
+    padding: 0.8rem 0.7rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ap-table tbody td {
+    padding: 0.6rem 0.6rem;
+    font-size: 0.75rem;
+  }
 }
 
 .ap-table tbody tr:last-child td {
@@ -301,6 +378,20 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .ap-summary-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .ap-summary-row {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
 }
 
 .ap-summary-card {

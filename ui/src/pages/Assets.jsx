@@ -27,6 +27,10 @@ function Assets() {
   const [marketFilter, setMarketFilter] = useState(filters.markets[0]);
   const [typeFilter, setTypeFilter] = useState(filters.types[0]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+  const closeSidebar = () => setSidebarOpen(false);
 
   const filtered = properties.filter((a) => {
     const matchSearch = !search || a.name.toLowerCase().includes(search.toLowerCase()) || a.id.toLowerCase().includes(search.toLowerCase()) || a.market.toLowerCase().includes(search.toLowerCase());
@@ -37,9 +41,9 @@ function Assets() {
 
   return (
     <div className="dashboard-layout">
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
       <div className="dashboard-main">
-        <Topbar title={page.title} />
+        <Topbar title={page.title} onMenuToggle={toggleSidebar} />
 
         <div className="assets-content">
           <p className="assets-subtitle">{page.subtitle}</p>

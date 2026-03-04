@@ -12,6 +12,13 @@
   flex-direction: column;
 }
 
+/* Mobile: Hide sidebar, full width layout */
+@media (max-width: 768px) {
+  .dashboard-main {
+    margin-left: 0;
+  }
+}
+
 /* ===== Top Bar ===== */
 .topbar {
   display: flex;
@@ -26,10 +33,29 @@
   z-index: 100;
 }
 
+@media (max-width: 768px) {
+  .topbar {
+    padding: 0 1rem;
+    height: 56px;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar {
+    padding: 0 0.75rem;
+  }
+}
+
 .topbar-left {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+}
+
+@media (max-width: 480px) {
+  .topbar-left {
+    gap: 0.5rem;
+  }
 }
 
 .topbar-title {
@@ -37,6 +63,18 @@
   font-weight: 700;
   color: #1a1a2e;
   margin: 0;
+}
+
+@media (max-width: 768px) {
+  .topbar-title {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar-title {
+    font-size: 0.9rem;
+  }
 }
 
 .live-badge {
@@ -53,6 +91,25 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .topbar-right {
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .topbar-right {
+    gap: 0.3rem;
+  }
+}
+
+/* Hide some topbar icons on very small screens */
+@media (max-width: 480px) {
+  .topbar-icon-btn:nth-child(2) {
+    display: none;
+  }
 }
 
 .topbar-icon-btn {
@@ -93,6 +150,12 @@
   align-items: flex-end;
 }
 
+@media (max-width: 640px) {
+  .topbar-user-info {
+    display: none;
+  }
+}
+
 .topbar-user-name {
   font-size: 0.85rem;
   font-weight: 600;
@@ -130,6 +193,23 @@
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+
+@media (max-width: 640px) {
+  .topbar-logout-btn {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar-logout-btn span {
+    display: none;
+  }
+
+  .topbar-logout-btn {
+    padding: 0.3rem 0.5rem;
+  }
 }
 
 .topbar-logout-btn:hover {

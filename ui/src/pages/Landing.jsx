@@ -9,6 +9,10 @@ function Landing() {
   const [data, setData] = useState(landingFallback);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(landingFallback.tabs[0]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+  const closeSidebar = () => setSidebarOpen(false);
 
   useEffect(() => {
     fetch('http://localhost:5000/api/command-center')
@@ -32,9 +36,9 @@ function Landing() {
   if (loading) {
     return (
       <div className="dashboard-layout">
-        <Sidebar />
+        <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
         <div className="dashboard-main">
-          <Topbar title="Command Center" />
+          <Topbar title="Command Center" onMenuToggle={toggleSidebar} />
           <div className="dashboard-content">
             <p className="dashboard-subtitle">Loading dashboard data...</p>
           </div>
@@ -45,9 +49,9 @@ function Landing() {
 
   return (
     <div className="dashboard-layout">
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
       <div className="dashboard-main">
-        <Topbar title={page.title} />
+        <Topbar title={page.title} onMenuToggle={toggleSidebar} />
 
         <div className="dashboard-content">
           <p className="dashboard-subtitle">{page.subtitle}</p>
@@ -130,6 +134,32 @@ function Landing() {
                   ))}
                 </tbody>
               </table>
+
+              {/* Mobile Asset Cards View */}
+              <div className="assets-mobile-list">
+                {assetRankings.map((a) => (
+                  <div className="asset-card" key={a.name}>
+                    <div className="asset-card-header">
+                      <div className="asset-card-name">{a.name}</div>
+                      <div className="asset-card-ytd">{a.marketValue || a.ytd}</div>
+                    </div>
+                    <div className="asset-data-grid">
+                      <div className="asset-data-item">
+                        <span className="asset-data-label">City</span>
+                        <span className="asset-data-value">{a.city || a.occupancy}</span>
+                      </div>
+                      <div className="asset-data-item">
+                        <span className="asset-data-label">Province</span>
+                        <span className="asset-data-value">{a.province || a.wale}</span>
+                      </div>
+                    </div>
+                    <div className="asset-card-footer">
+                      <span className="asset-wale"></span>
+                      <span className={`asset-risk-badge ${a.risk.toLowerCase()}`}>{a.risk}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="action-queue-panel">

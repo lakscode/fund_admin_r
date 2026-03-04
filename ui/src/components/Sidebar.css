@@ -12,6 +12,27 @@
   top: 0;
   bottom: 0;
   z-index: 200;
+  transition: transform 0.3s ease;
+}
+
+/* Mobile sidebar - hidden by default, slides in when toggled */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100%;
+    max-width: 80vw;
+  }
 }
 
 .sidebar-top {
@@ -26,6 +47,13 @@
   gap: 0.6rem;
   padding: 0 1.25rem;
   margin-bottom: 1.2rem;
+}
+
+@media (max-width: 480px) {
+  .sidebar-logo {
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+  }
 }
 
 .logo-icon {
