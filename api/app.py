@@ -20,6 +20,7 @@ from routes.command_center import cc_bp
 from routes.leasing import leasing_bp
 from routes.assets import assets_bp
 from routes.funds import funds_bp
+from routes.chat import chat_bp
 
 app = Flask(__name__)
 CORS(app, origins=CORS_ORIGINS)
@@ -32,6 +33,7 @@ app.register_blueprint(cc_bp)
 app.register_blueprint(leasing_bp)
 app.register_blueprint(assets_bp)
 app.register_blueprint(funds_bp)
+app.register_blueprint(chat_bp)
 
 
 if __name__ == "__main__":

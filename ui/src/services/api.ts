@@ -3,6 +3,7 @@ import { LandingData } from '../types/landing';
 import { LeasingData } from '../types/leasing';
 import { AssetsData } from '../types/assets';
 import { FundsData } from '../types/funds';
+import { ChatMessage } from '../types/chat';
 
 async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_URL}${endpoint}`, {
@@ -43,4 +44,16 @@ export function getAssets() {
 // Funds
 export function getFunds() {
   return request<FundsData>('/funds');
+}
+
+// Chat
+export function sendChatMessage(message: string, sessionId: string) {
+  return request<ChatMessage>('/chat', {
+    method: 'POST',
+    body: JSON.stringify({ message, sessionId }),
+  });
+}
+
+export function getChatHistory(sessionId: string) {
+  return request<{ messages: ChatMessage[] }>(`/chat/history?sessionId=${sessionId}`);
 }
