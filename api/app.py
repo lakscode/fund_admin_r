@@ -17,6 +17,9 @@ from routes.health import health_bp
 from routes.roles import roles_bp
 from routes.data import data_bp
 from routes.command_center import cc_bp
+from routes.leasing import leasing_bp
+from routes.assets import assets_bp
+from routes.funds import funds_bp
 
 app = Flask(__name__)
 CORS(app, origins=CORS_ORIGINS)
@@ -26,6 +29,9 @@ app.register_blueprint(health_bp)
 app.register_blueprint(roles_bp)
 app.register_blueprint(data_bp)
 app.register_blueprint(cc_bp)
+app.register_blueprint(leasing_bp)
+app.register_blueprint(assets_bp)
+app.register_blueprint(funds_bp)
 
 
 if __name__ == "__main__":

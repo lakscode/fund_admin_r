@@ -58,6 +58,12 @@
   }
 }
 
+.topbar-logo {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+}
+
 .topbar-title {
   font-size: 1.25rem;
   font-weight: 700;

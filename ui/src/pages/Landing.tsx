@@ -2,30 +2,10 @@ import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
 import landingFallback from '../data/landing.json';
-import { API_URL } from '../config/constants';
+import { getCommandCenter } from '../services/api';
+import { LandingData } from '../types/landing';
 import '../components/Layout.css';
 import './Landing.css';
-
-interface AssetRanking {
-  name: string;
-  risk: string;
-  ytd?: string;
-  occupancy?: string;
-  wale?: string;
-  marketValue?: string;
-  city?: string;
-  province?: string;
-}
-
-interface LandingData {
-  page: { title: string; subtitle: string };
-  kpiRow1: { label: string; value: string; change: string; changeType: string; tags: string[]; accent: string }[];
-  kpiRow2: { label: string; value: string; sub: string; tag: string; negative: boolean }[];
-  returns: { period: string; val1: string; val2: string }[];
-  tabs: string[];
-  assetRankings: AssetRanking[];
-  actionQueue: { status: string; statusColor: string; time: string; title: string; hasLink: boolean }[];
-}
 
 function Landing() {
   const [data, setData] = useState<LandingData>(landingFallback);
@@ -37,12 +17,9 @@ function Landing() {
   const closeSidebar = () => setSidebarOpen(false);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/command-center`)
-      .then((res) => {
-        if (!res.ok) throw new Error('API unavailable');
-        return res.json();
-      })
+    getCommandCenter()
       .then((apiData) => {
+        console.log("apiData ",apiData)
         setData(apiData);
         setActiveTab(apiData.tabs?.[0] || landingFallback.tabs[0]);
       })

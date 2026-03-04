@@ -40,7 +40,7 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
       <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
       <div className="sidebar-top">
         <div className="sidebar-logo">
-          <span className="logo-icon">{brand.logoIcon}</span>
+          <img src="/images/logo.png" alt={brand.logoText} className="logo-img" />
           <span className="logo-text">{brand.logoText}</span>
         </div>
 

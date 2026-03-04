@@ -7,6 +7,9 @@ cc_bp = Blueprint("command_center", __name__, url_prefix="/api")
 totals = db["totals_data"]
 properties = db["properties"]
 fund_tree = db["fund_tree"]
+dashboard_config = db["dashboard_config"]
+action_queue_col = db["action_queue"]
+return_history_col = db["return_history"]
 
 
 def fmt_currency(val, decimals=1):
@@ -27,6 +30,22 @@ def fmt_pct(val, decimals=1):
     return f"{val:.{decimals}f}%"
 
 
+def get_config():
+    """Load dashboard config from database."""
+    return dashboard_config.find_one({"page_key": "command_center"}, {"_id": 0}) or {}
+
+
+def get_account(account_map, key, field="closing_balance"):
+    """Fetch a GL account value using the account_map from config."""
+    code = account_map.get(key, "")
+    if not code:
+        return 0.0
+    doc = totals.find_one({"account_code": {"$regex": f"^{code}"}})
+    if doc:
+        return doc.get(field, 0.0) or 0.0
+    return 0.0
+
+
 def safe_get(account_code, field="closing_balance"):
     """Fetch a single account row by code and return requested field."""
     doc = totals.find_one({"account_code": {"$regex": f"^{account_code}"}})
@@ -35,41 +54,67 @@ def safe_get(account_code, field="closing_balance"):
     return 0.0
 
 
-def compute_kpi_row1():
-    """Primary KPI cards derived from totals_data."""
-    # Total Assets -> AUM
-    total_assets = abs(safe_get("19999999"))
+def compute_occupancy():
+    """Compute portfolio occupancy from properties collection.
 
-    # Net Property Operating Income -> Portfolio NOI
-    noi = abs(safe_get("79999999"))
+    Uses market_value > 0 as occupied proxy since the property data
+    doesn't have explicit occupancy fields.
+    """
+    pipeline = [
+        {"$match": {"property_name": {"$ne": None}}},
+        {"$group": {
+            "_id": None,
+            "total_count": {"$sum": 1},
+            "occupied_count": {"$sum": {"$cond": [{"$gt": ["$market_value", 0]}, 1, 0]}},
+            "total_mv": {"$sum": {"$ifNull": ["$market_value", 0]}},
+        }},
+    ]
+    result = list(properties.aggregate(pipeline))
+    if result:
+        r = result[0]
+        total = r["total_count"]
+        occupied = r["occupied_count"]
+        return (occupied / total * 100) if total else 0, total
+    return 0, 0
 
-    # Total Income -> Revenue
-    revenue = abs(safe_get("49999999"))
 
-    # Total Cash
-    cash = abs(safe_get("10009999"))
+def compute_at_risk(thresholds):
+    """Count at-risk properties based on market_value threshold from config."""
+    threshold = thresholds.get("at_risk_market_value", 3_000_000)
+    total = properties.count_documents({"property_name": {"$ne": None}})
+    at_risk = properties.count_documents({
+        "property_name": {"$ne": None},
+        "market_value": {"$lte": threshold, "$gt": 0},
+    })
+    return at_risk, total
 
-    # Expense Ratio = Total Fund Expenses / Revenue
-    fund_expenses = abs(safe_get("83009999"))
+
+def compute_kpi_row1(account_map, thresholds):
+    """Primary KPI cards — all values from totals_data and properties collections."""
+    total_assets = abs(get_account(account_map, "total_assets"))
+    noi = abs(get_account(account_map, "noi"))
+    revenue = abs(get_account(account_map, "total_income"))
+    cash = abs(get_account(account_map, "total_cash"))
+    fund_expenses = abs(get_account(account_map, "fund_expenses"))
     expense_ratio = (fund_expenses / revenue * 100) if revenue else 0
 
-    # Occupancy from properties
-    prop_count = properties.count_documents({})
-    occupancy = 92.0  # default; computed from lease data when available
+    occupancy, prop_count = compute_occupancy()
 
-    # Compute changes from opening vs closing
-    total_assets_open = abs(safe_get("19999999", "opening_balance"))
+    # Changes: opening vs closing from GL
+    total_assets_open = abs(get_account(account_map, "total_assets", "opening_balance"))
     aum_change = ((total_assets - total_assets_open) / total_assets_open * 100) if total_assets_open else 0
 
-    noi_activity = safe_get("79999999", "activity")
-    noi_open = abs(safe_get("79999999", "opening_balance"))
+    noi_activity = get_account(account_map, "noi", "activity")
+    noi_open = abs(get_account(account_map, "noi", "opening_balance"))
     noi_change = (abs(noi_activity) / noi_open * 100) if noi_open else 0
 
-    revenue_activity = safe_get("49999999", "activity")
-    revenue_open = abs(safe_get("49999999", "opening_balance"))
+    revenue_activity = get_account(account_map, "total_income", "activity")
+    revenue_open = abs(get_account(account_map, "total_income", "opening_balance"))
     revenue_change = (abs(revenue_activity) / revenue_open * 100) if revenue_open else 0
 
-    cash_activity = safe_get("10009999", "activity")
+    cash_activity = get_account(account_map, "total_cash", "activity")
+
+    expense_warn = thresholds.get("expense_ratio_warn", 35)
 
     return [
         {
@@ -108,9 +153,9 @@ def compute_kpi_row1():
             "label": "EXPENSE RATIO",
             "value": fmt_pct(expense_ratio),
             "change": f"{expense_ratio:.1f}pp of Revenue",
-            "changeType": "negative" if expense_ratio > 35 else "positive",
+            "changeType": "negative" if expense_ratio > expense_warn else "positive",
             "tags": ["RECENCY"],
-            "accent": "#e74c3c" if expense_ratio > 35 else "#27ae60",
+            "accent": "#e74c3c" if expense_ratio > expense_warn else "#27ae60",
         },
         {
             "label": "CASH",
@@ -123,26 +168,20 @@ def compute_kpi_row1():
     ]
 
 
-def compute_kpi_row2():
-    """Secondary KPI cards."""
-    # Equity Under Management = Total Equity
-    eum = abs(safe_get("35009999"))
-
-    # DSCR = NOI / Debt Service
-    noi = abs(safe_get("79999999"))
-    debt_service = abs(safe_get("80004999"))
+def compute_kpi_row2(account_map, thresholds):
+    """Secondary KPI cards — all values from GL and properties."""
+    eum = abs(get_account(account_map, "total_equity"))
+    noi = abs(get_account(account_map, "noi"))
+    debt_service = abs(get_account(account_map, "debt_service"))
     dscr = (noi / debt_service) if debt_service else 0
+    dscr_covenant = thresholds.get("dscr_covenant", 1.25)
 
-    # Budget vs Actual = Activity column of Net Income
-    budget_vs_actual = safe_get("99009999", "activity")
+    budget_vs_actual = get_account(account_map, "net_income", "activity")
 
-    # YTD Return = Net Income / Total Equity
-    net_income = abs(safe_get("99009999"))
+    net_income = abs(get_account(account_map, "net_income"))
     ytd_return = (net_income / eum * 100) if eum else 0
 
-    # At-risk: properties count (placeholder logic)
-    prop_count = properties.count_documents({})
-    at_risk = max(0, prop_count - 1)  # simplified
+    at_risk, prop_count = compute_at_risk(thresholds)
 
     return [
         {
@@ -155,9 +194,9 @@ def compute_kpi_row2():
         {
             "label": "PORTFOLIO DSCR",
             "value": f"{dscr:.2f}x",
-            "sub": f"{'Above' if dscr >= 1.25 else 'Below'} 1.25x covenant",
+            "sub": f"{'Above' if dscr >= dscr_covenant else 'Below'} {dscr_covenant}x covenant",
             "tag": "GL + DEBT",
-            "negative": dscr < 1.25,
+            "negative": dscr < dscr_covenant,
         },
         {
             "label": "BUDGET VS ACTUAL",
@@ -184,11 +223,24 @@ def compute_kpi_row2():
 
 
 def compute_returns():
-    """Compute return periods from net income data."""
-    net_income = abs(safe_get("99009999"))
-    eum = abs(safe_get("35009999"))
-    annual_return = (net_income / eum * 100) if eum else 0
+    """Load return periods from return_history collection."""
+    records = list(return_history_col.find({}, {"_id": 0}).sort("period", 1))
 
+    if records:
+        return [
+            {
+                "period": r["period"],
+                "val1": fmt_pct(r["fund_return"]),
+                "val2": fmt_pct(r["benchmark_return"]),
+            }
+            for r in records
+        ]
+
+    # Fallback: compute from GL if return_history not seeded
+    account_map = get_config().get("account_map", {})
+    net_income = abs(get_account(account_map, "net_income"))
+    eum = abs(get_account(account_map, "total_equity"))
+    annual_return = (net_income / eum * 100) if eum else 0
     return [
         {"period": "1Y", "val1": fmt_pct(annual_return), "val2": fmt_pct(annual_return * 0.63)},
         {"period": "3Y", "val1": fmt_pct(annual_return * 0.82), "val2": fmt_pct(annual_return * 0.52)},
@@ -198,15 +250,24 @@ def compute_returns():
 
 def get_asset_rankings():
     """Build asset rankings from the properties collection."""
+    config = get_config()
+    thresholds = config.get("thresholds", {})
+    mv_threshold = thresholds.get("at_risk_market_value", 3_000_000)
+
     props = list(properties.find(
         {"property_name": {"$ne": None}},
         {"_id": 0, "property_name": 1, "city": 1, "province": 1, "market_value": 1},
-    ).limit(10))
+    ).sort("market_value", -1).limit(10))
 
     rankings = []
-    for i, p in enumerate(props):
+    for p in props:
         mv = p.get("market_value") or 0
-        risk = "Low" if mv > 5_000_000 else "High"
+        if mv > mv_threshold * 2:
+            risk = "Low"
+        elif mv > mv_threshold:
+            risk = "Medium"
+        else:
+            risk = "High"
         rankings.append({
             "name": p.get("property_name", "Unknown"),
             "city": p.get("city", ""),
@@ -218,54 +279,33 @@ def get_asset_rankings():
 
 
 def get_action_queue():
-    """Return action queue items from the action_queue collection, or defaults."""
-    collection = db["action_queue"]
-    items = list(collection.find({}, {"_id": 0}).sort("created_at", -1).limit(10))
-
-    if not items:
-        return [
-            {
-                "status": "OVERDUE",
-                "statusColor": "#e74c3c",
-                "time": "2h ago",
-                "title": "Reconcile Q3 Variance - Summit Retail",
-                "hasLink": True,
-            },
-            {
-                "status": "PENDING APPROVAL",
-                "statusColor": "#f39c12",
-                "time": "Yesterday",
-                "title": "Capital Call Notice #42 Distribution",
-                "hasLink": False,
-            },
-        ]
+    """Read action queue from database."""
+    items = list(action_queue_col.find(
+        {}, {"_id": 0, "created_at": 0}
+    ).sort("created_at", -1).limit(10))
     return items
 
 
 @cc_bp.route("/command-center", methods=["GET"])
 def command_center():
-    """Full command center dashboard payload."""
+    """Full command center dashboard payload — all data from database."""
     has_data = totals.count_documents({}) > 0
-
     if not has_data:
         return jsonify({"error": "No data imported yet. Call POST /api/data/import first."}), 404
 
+    config = get_config()
+    account_map = config.get("account_map", {})
+    thresholds = config.get("thresholds", {})
+
     data = {
-        "page": {
+        "page": config.get("page", {
             "title": "Command Center",
-            "subtitle": "Executive portfolio-wide visibility · Horizon Value Fund I",
-        },
-        "kpiRow1": compute_kpi_row1(),
-        "kpiRow2": compute_kpi_row2(),
+            "subtitle": "Executive portfolio-wide visibility",
+        }),
+        "kpiRow1": compute_kpi_row1(account_map, thresholds),
+        "kpiRow2": compute_kpi_row2(account_map, thresholds),
         "returns": compute_returns(),
-        "tabs": [
-            "Daily Brief",
-            "Performance Summary",
-            "Liquidity & Cash",
-            "Risk & Valuation",
-            "Month-End Control",
-            "Data Health",
-        ],
+        "tabs": config.get("tabs", []),
         "assetRankings": get_asset_rankings(),
         "actionQueue": get_action_queue(),
     }
@@ -280,9 +320,13 @@ def command_center_kpis():
     if not has_data:
         return jsonify({"error": "No data imported yet."}), 404
 
+    config = get_config()
+    account_map = config.get("account_map", {})
+    thresholds = config.get("thresholds", {})
+
     return jsonify({
-        "kpiRow1": compute_kpi_row1(),
-        "kpiRow2": compute_kpi_row2(),
+        "kpiRow1": compute_kpi_row1(account_map, thresholds),
+        "kpiRow2": compute_kpi_row2(account_map, thresholds),
     }), 200
 
 

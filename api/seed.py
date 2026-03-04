@@ -116,8 +116,106 @@ def seed_users():
     print(f"  Users done: {inserted} inserted, {skipped} skipped")
 
 
+def seed_dashboard_config():
+    collection = db["dashboard_config"]
+    config = {
+        "page_key": "command_center",
+        "page": {
+            "title": "Command Center",
+            "subtitle": "Executive portfolio-wide visibility · Horizon Value Fund I",
+        },
+        "tabs": [
+            "Daily Brief",
+            "Performance Summary",
+            "Liquidity & Cash",
+            "Risk & Valuation",
+            "Month-End Control",
+            "Data Health",
+        ],
+        "account_map": {
+            "total_assets": "19999999",
+            "total_cash": "10009999",
+            "total_income": "49999999",
+            "noi": "79999999",
+            "fund_expenses": "83009999",
+            "total_equity": "35009999",
+            "debt_service": "80004999",
+            "net_income": "99009999",
+        },
+        "thresholds": {
+            "expense_ratio_warn": 35,
+            "dscr_covenant": 1.25,
+            "at_risk_market_value": 3000000,
+            "occupancy_target": 90,
+        },
+    }
+
+    collection.delete_many({"page_key": "command_center"})
+    collection.insert_one(config)
+    print("  Inserted: command_center dashboard config")
+
+
+def seed_action_queue():
+    collection = db["action_queue"]
+    collection.drop()
+    items = [
+        {
+            "status": "OVERDUE",
+            "statusColor": "#e74c3c",
+            "time": "2h ago",
+            "title": "Reconcile Q3 Variance - Summit Retail",
+            "hasLink": True,
+            "created_at": datetime.datetime.now(datetime.timezone.utc),
+        },
+        {
+            "status": "PENDING APPROVAL",
+            "statusColor": "#f39c12",
+            "time": "Yesterday",
+            "title": "Capital Call Notice #42 Distribution",
+            "hasLink": False,
+            "created_at": datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=1),
+        },
+        {
+            "status": "IN REVIEW",
+            "statusColor": "#3498db",
+            "time": "2 days ago",
+            "title": "ESB Building 1 - Lease Renewal Approval",
+            "hasLink": True,
+            "created_at": datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=2),
+        },
+        {
+            "status": "PENDING",
+            "statusColor": "#8b8ba3",
+            "time": "3 days ago",
+            "title": "Monthly NAV Calculation - Fund I",
+            "hasLink": True,
+            "created_at": datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=3),
+        },
+    ]
+    collection.insert_many(items)
+    print(f"  Inserted: {len(items)} action queue items")
+
+
+def seed_return_history():
+    collection = db["return_history"]
+    collection.drop()
+    records = [
+        {"period": "1Y", "fund_return": 97.5, "benchmark_return": 61.4},
+        {"period": "3Y", "fund_return": 80.0, "benchmark_return": 50.7},
+        {"period": "5Y", "fund_return": 92.6, "benchmark_return": 56.6},
+    ]
+    collection.insert_many(records)
+    print(f"  Inserted: {len(records)} return history records")
+
+
 if __name__ == "__main__":
     print("Seeding roles...\n")
     seed_roles()
     print("Seeding users...\n")
     seed_users()
+    print("\nSeeding dashboard config...\n")
+    seed_dashboard_config()
+    print("\nSeeding action queue...\n")
+    seed_action_queue()
+    print("\nSeeding return history...\n")
+    seed_return_history()

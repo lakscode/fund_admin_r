@@ -1,12 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
-import assetsData from '../data/assets.json';
+import assetsFallback from '../data/assets.json';
+import { getAssets } from '../services/api';
+import { AssetsData } from '../types/assets';
 import '../components/Layout.css';
 import './Assets.css';
-
-const { page, properties, pagination, filters, summaryCards } = assetsData;
-const TOTAL_PAGES = Math.ceil(pagination.totalItems / pagination.itemsPerPage);
 
 function SummaryIcon({ type, color }: { type: string; color: string }) {
   const props = { width: 22, height: 22, viewBox: '0 0 24 24', fill: 'none', stroke: color, strokeWidth: 2, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
@@ -23,14 +22,54 @@ function SummaryIcon({ type, color }: { type: string; color: string }) {
 }
 
 function Assets() {
+  const [data, setData] = useState<AssetsData>(assetsFallback);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [marketFilter, setMarketFilter] = useState(filters.markets[0]);
-  const [typeFilter, setTypeFilter] = useState(filters.types[0]);
+  const [marketFilter, setMarketFilter] = useState(assetsFallback.filters.markets[0]);
+  const [typeFilter, setTypeFilter] = useState(assetsFallback.filters.types[0]);
   const [currentPage, setCurrentPage] = useState(1);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
   const closeSidebar = () => setSidebarOpen(false);
+
+  useEffect(() => {
+    getAssets()
+      .then((apiData) => {
+        setData(apiData);
+        setMarketFilter(apiData.filters?.markets?.[0] || assetsFallback.filters.markets[0]);
+        setTypeFilter(apiData.filters?.types?.[0] || assetsFallback.filters.types[0]);
+      })
+      .catch(() => {
+        setData(assetsFallback);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  const { page, properties, pagination, filters, summaryCards } = data;
+  const TOTAL_PAGES = Math.ceil(pagination.totalItems / pagination.itemsPerPage);
+
+  if (loading) {
+    return (
+      <div className="dashboard-layout">
+        <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
+        <div className="dashboard-main">
+          <Topbar title="Asset Performance" onMenuToggle={toggleSidebar} />
+          <div className="assets-content">
+            <div className="loading-overlay">
+              <svg className="loading-spinner" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="12" y1="2" x2="12" y2="6" /><line x1="12" y1="18" x2="12" y2="22" />
+                <line x1="4.93" y1="4.93" x2="7.76" y2="7.76" /><line x1="16.24" y1="16.24" x2="19.07" y2="19.07" />
+                <line x1="2" y1="12" x2="6" y2="12" /><line x1="18" y1="12" x2="22" y2="12" />
+                <line x1="4.93" y1="19.07" x2="7.76" y2="16.24" /><line x1="16.24" y1="7.76" x2="19.07" y2="4.93" />
+              </svg>
+              <p className="loading-text">Loading assets data...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const filtered = properties.filter((a) => {
     const matchSearch = !search || a.name.toLowerCase().includes(search.toLowerCase()) || a.id.toLowerCase().includes(search.toLowerCase()) || a.market.toLowerCase().includes(search.toLowerCase());

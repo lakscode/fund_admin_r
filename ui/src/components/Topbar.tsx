@@ -41,6 +41,7 @@ function Topbar({ title, showLive = true, onMenuToggle }: TopbarProps) {
             </svg>
           </button>
         )}
+        <img style={{display:"none"}} src="/images/logo.png" alt="Logo" className="topbar-logo" />
         <h1 className="topbar-title">{title}</h1>
         {showLive && <span className="live-badge">LIVE</span>}
       </div>

@@ -1,0 +1,39 @@
+{
+  "page": {
+    "title": "Fund Overview",
+    "subtitle": "Horizon Value Fund I · Fund structure, NAV and investor summary"
+  },
+  "tabs": ["Overview", "Investors", "Structure", "Distributions", "Documents"],
+  "overview": {
+    "nav": "$1.3M",
+    "totalEquity": "$1.3M",
+    "totalAssets": "$6.4M",
+    "totalLiabilities": "$7.7M",
+    "netIncome": "$1.3M",
+    "noi": "$2.9M",
+    "cash": "$11.4M",
+    "totalDebt": "$1.5M",
+    "ltv": "22.7%",
+    "ytdReturn": "97.5%"
+  },
+  "stats": {
+    "propertyCount": 10,
+    "investorCount": 18,
+    "fundTreeEntities": 247
+  },
+  "allocation": [
+    { "city": "Edmonton", "value": "$42.3M", "percentage": 100, "propertyCount": 10 }
+  ],
+  "investors": [
+    { "name": "Investment Vehicle 590", "entityId": 590, "type": "LP" },
+    { "name": "Investment Vehicle 592", "entityId": 592, "type": "LP" },
+    { "name": "Investment Vehicle 596", "entityId": 596, "type": "LP" },
+    { "name": "Investment Vehicle 600", "entityId": 600, "type": "LP" }
+  ],
+  "structure": [
+    { "entityId": 693, "entityName": "Entity 693", "investmentCount": 10 },
+    { "entityId": 972, "entityName": "Entity 972", "investmentCount": 4 },
+    { "entityId": 933, "entityName": "Entity 933", "investmentCount": 2 },
+    { "entityId": 592, "entityName": "Entity 592", "investmentCount": 5 }
+  ]
+}
