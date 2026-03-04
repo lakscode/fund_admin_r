@@ -1,0 +1,97 @@
+{
+  "page": {
+    "title": "Command Center",
+    "subtitle": "Executive portfolio-wide visibility · Horizon Value Fund I"
+  },
+  "kpiRow1": [
+    {
+      "label": "AUM",
+      "value": "$1.2B",
+      "change": "+3.2% vs Prior Year",
+      "changeType": "positive",
+      "tags": ["APPRAISAL + BOOK"],
+      "accent": "#27ae60"
+    },
+    {
+      "label": "PORTFOLIO NOI",
+      "value": "$78.4M",
+      "change": "+2.4% vs Budget",
+      "changeType": "positive",
+      "tags": ["RECENCY", "QUALITY"],
+      "accent": "#27ae60"
+    },
+    {
+      "label": "OCCUPANCY",
+      "value": "92%",
+      "change": "Portfolio-Wide · 3 Assets",
+      "changeType": "neutral",
+      "tags": ["LEASE DATA", "RECENCY"],
+      "accent": "#27ae60"
+    },
+    {
+      "label": "REVENUE",
+      "value": "$112.6M",
+      "change": "+1.8% vs Budget",
+      "changeType": "positive",
+      "tags": ["RECENCY"],
+      "accent": "#27ae60"
+    },
+    {
+      "label": "EXPENSE RATIO",
+      "value": "38.2%",
+      "change": "+2.1pp vs Budget",
+      "changeType": "negative",
+      "tags": ["RECENCY"],
+      "accent": "#e74c3c"
+    },
+    {
+      "label": "CASH",
+      "value": "$11.3M",
+      "change": "+$285K MTD",
+      "changeType": "positive",
+      "tags": ["BANK FEEDS", "RECENCY"],
+      "accent": "#27ae60"
+    }
+  ],
+  "kpiRow2": [
+    { "label": "EUM", "value": "$552M", "sub": "Equity Under Management", "tag": "GL + APPRAISAL", "negative": false },
+    { "label": "PORTFOLIO DSCR", "value": "1.45x", "sub": "Above 1.25x covenant", "tag": "GL + DEBT", "negative": false },
+    { "label": "BUDGET VS ACTUAL", "value": "-$1.9M", "sub": "NOI shortfall YTD", "tag": "GL", "negative": true },
+    { "label": "YTD RETURN", "value": "8.2%", "sub": "Levered + Net", "tag": "CALCULATED", "negative": false },
+    { "label": "AT-RISK ASSETS", "value": "2 of 3", "sub": "Below budget threshold", "tag": "GL + LEASES", "negative": true }
+  ],
+  "returns": [
+    { "period": "1Y", "val1": "12.4%", "val2": "7.8%" },
+    { "period": "3Y", "val1": "10.1%", "val2": "6.5%" },
+    { "period": "5Y", "val1": "11.8%", "val2": "7.2%" }
+  ],
+  "tabs": [
+    "Daily Brief",
+    "Performance Summary",
+    "Liquidity & Cash",
+    "Risk & Valuation",
+    "Month-End Control",
+    "Data Health"
+  ],
+  "assetRankings": [
+    { "name": "Oakwood Corporate Plaza", "ytd": "11.2%", "occupancy": "98.5%", "wale": "4.2 yrs", "risk": "Low" },
+    { "name": "The Meridian Industrial Park", "ytd": "9.8%", "occupancy": "94.0%", "wale": "6.5 yrs", "risk": "Low" },
+    { "name": "Summit Retail Collective", "ytd": "6.1%", "occupancy": "82.3%", "wale": "21 yrs", "risk": "High" }
+  ],
+  "actionQueue": [
+    {
+      "status": "OVERDUE",
+      "statusColor": "#e74c3c",
+      "time": "2h ago",
+      "title": "Reconcile Q3 Variance - Summit Retail",
+      "hasLink": true
+    },
+    {
+      "status": "PENDING APPROVAL",
+      "statusColor": "#f39c12",
+      "time": "Yesterday",
+      "title": "Capital Call Notice #42 Distribution",
+      "hasLink": false
+    }
+  ]
+}

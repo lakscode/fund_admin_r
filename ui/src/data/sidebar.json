@@ -1,0 +1,26 @@
+{
+  "brand": {
+    "logoIcon": "R",
+    "logoText": "REstackAI"
+  },
+  "fundInfo": {
+    "label": "FUND ADMINISTRATOR",
+    "aum": "$1.2B AUM · 3 Assets",
+    "role": "Role: Read-Only"
+  },
+  "navigation": [
+    { "label": "Command Center", "path": "/", "icon": "grid", "exact": true },
+    { "label": "Funds", "path": "/funds", "icon": "book" },
+    { "label": "Leasing", "path": "/leasing", "icon": "file-text" },
+    { "label": "Assets", "path": "/assets", "icon": "credit-card" },
+    { "label": "FundOps AI Chat", "path": "/fundops", "icon": "message-square" }
+  ],
+  "adminNavigation": [
+    { "label": "Settings", "path": "/settings", "icon": "settings" }
+  ],
+  "user": {
+    "name": "Alex Ferguson",
+    "role": "Portfolio Manager",
+    "initials": "AF"
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "page": {
+    "title": "Asset Performance",
+    "subtitle": "Real-time property list ranked by risk and operational performance."
+  },
+  "properties": [
+    {
+      "name": "Chicago River Tower",
+      "id": "#CR-4022",
+      "market": "Chicago",
+      "type": "Mixed-Use",
+      "noiYtd": "$24.1M",
+      "noiVsBudget": "-9.0%",
+      "noiVsType": "negative",
+      "occupancy": "82%",
+      "dscr": "1.18x",
+      "rentExpiring": "$4.5M",
+      "risk": "High",
+      "monthEnd": "NOT STARTED"
+    },
+    {
+      "name": "Dallas Logistics Center",
+      "id": "#DL-1109",
+      "market": "Dallas",
+      "type": "Industrial",
+      "noiYtd": "$26.2M",
+      "noiVsBudget": "-6.4%",
+      "noiVsType": "negative",
+      "occupancy": "88%",
+      "dscr": "1.45x",
+      "rentExpiring": "$3.2M",
+      "risk": "High",
+      "monthEnd": "IN PROGRESS"
+    },
+    {
+      "name": "Phoenix Business Park",
+      "id": "#PB-9921",
+      "market": "Phoenix",
+      "type": "Office",
+      "noiYtd": "$28.1M",
+      "noiVsBudget": "+0.5%",
+      "noiVsType": "positive",
+      "occupancy": "94%",
+      "dscr": "1.62x",
+      "rentExpiring": "$1.8M",
+      "risk": "Medium",
+      "monthEnd": "FINALIZED"
+    },
+    {
+      "name": "Austin Tech Hub",
+      "id": "#AT-5021",
+      "market": "Austin",
+      "type": "Mixed-Use",
+      "noiYtd": "$31.4M",
+      "noiVsBudget": "+1.2%",
+      "noiVsType": "positive",
+      "occupancy": "96%",
+      "dscr": "1.88x",
+      "rentExpiring": "$0.9M",
+      "risk": "Low",
+      "monthEnd": "FINALIZED"
+    }
+  ],
+  "pagination": {
+    "totalItems": 24,
+    "itemsPerPage": 4
+  },
+  "filters": {
+    "markets": ["All Markets", "Chicago", "Dallas", "Phoenix", "Austin"],
+    "types": ["All Types", "Mixed-Use", "Industrial", "Office"]
+  },
+  "summaryCards": [
+    {
+      "label": "AGGREGATE DSCR",
+      "icon": "trend",
+      "value": "1.52x",
+      "sub": "+0.04 from prev. month",
+      "subColor": "#27ae60",
+      "accent": "#e8a838"
+    },
+    {
+      "label": "AVG. OCCUPANCY",
+      "icon": "clock",
+      "value": "90.2%",
+      "sub": "Portfolio health: High",
+      "subColor": "#8b8ba3",
+      "accent": "#27ae60"
+    },
+    {
+      "label": "EXPIRING REVENUE",
+      "icon": "calendar",
+      "value": "$10.4M",
+      "sub": "Due within next 180 days",
+      "subColor": "#8b8ba3",
+      "accent": "#8b8ba3"
+    }
+  ]
+}

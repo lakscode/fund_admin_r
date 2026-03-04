@@ -1,0 +1,83 @@
+{
+  "page": {
+    "title": "Leasing",
+    "subtitle": "Cross-portfolio leasing activity & tenant exposure"
+  },
+  "tabs": [
+    "Rollover Dashboard",
+    "Tenant Risk",
+    "Leasing Activity",
+    "Market Benchmarks"
+  ],
+  "kpiCards": [
+    {
+      "label": "WALE",
+      "icon": "clock",
+      "value": "4.2",
+      "unit": "Yrs",
+      "sub": "Weighted Avg Lease Expiry",
+      "dotColor": "#8b8ba3"
+    },
+    {
+      "label": "RENT AT RISK (180D)",
+      "icon": "dollar",
+      "value": "$5.4M",
+      "unit": "",
+      "sub": "3 leases at risk",
+      "dotColor": "#e74c3c"
+    },
+    {
+      "label": "EXPIRING < 12 MO",
+      "icon": "timer",
+      "value": "11%",
+      "unit": "",
+      "sub": "of Total NOI",
+      "dotColor": "#e74c3c"
+    },
+    {
+      "label": "EXPIRING 12-24 MO",
+      "icon": "calendar",
+      "value": "27%",
+      "unit": "",
+      "sub": "of Total NOI",
+      "dotColor": "#f39c12"
+    }
+  ],
+  "chartData": [
+    { "quarter": "Q1 2024", "renewed": 18, "potential": 12 },
+    { "quarter": "Q2 2024", "renewed": 25, "potential": 20 },
+    { "quarter": "Q3 2024", "renewed": 35, "potential": 30 },
+    { "quarter": "Q4 2024", "renewed": 30, "potential": 25 },
+    { "quarter": "Q1 2025", "renewed": 60, "potential": 20 },
+    { "quarter": "Q2 2025", "renewed": 70, "potential": 15 }
+  ],
+  "actionQueue": [
+    {
+      "icon": "warning",
+      "color": "#e74c3c",
+      "bgColor": "#fef2f0",
+      "title": "3 leases expiring within 90 days",
+      "impact": "$3.9M rent at risk",
+      "reason": "No renewal LOI filed",
+      "next": "Initiate renewal discussions"
+    },
+    {
+      "icon": "document",
+      "color": "#f39c12",
+      "bgColor": "#fef9ec",
+      "title": "DataVault LLC lease pending signature",
+      "impact": "$380K new income",
+      "reason": "Lease sent Feb 10",
+      "next": "Follow up with tenant"
+    },
+    {
+      "icon": "chart",
+      "color": "#f39c12",
+      "bgColor": "#fef9ec",
+      "title": "Occupancy trending below target at Chicago",
+      "impact": "82% vs 90% target",
+      "reason": "Smith & Co termination",
+      "next": "Accelerate leasing pipeline"
+    }
+  ]
+}

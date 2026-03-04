@@ -1,0 +1,22 @@
+{
+  "page": {
+    "title": "Settings",
+    "subtitle": "Manage users, roles, and financial configurations"
+  },
+  "chartOfAccounts": {
+    "title": "Chart of Accounts Mapping",
+    "description": "Maps source GL accounts to standardized KPI categories",
+    "totalItems": 9,
+    "itemsPerPage": 8,
+    "accounts": [
+      { "code": "4000", "name": "Rental Revenue", "category": "Base Rent", "status": "mapped" },
+      { "code": "4100", "name": "CAM Recovery", "category": "Other Income", "status": "mapped" },
+      { "code": "4200", "name": "Parking Revenue", "category": "Other Income", "status": "mapped" },
+      { "code": "5000", "name": "Repairs & Maintenance", "category": "R&M", "status": "mapped" },
+      { "code": "5100", "name": "Utilities", "category": "Utilities", "status": "mapped" },
+      { "code": "5200", "name": "Property Taxes", "category": "Property Taxes", "status": "mapped" },
+      { "code": "5300", "name": "Insurance", "category": "Insurance", "status": "mapped" },
+      { "code": "6000", "name": "Legal Fees", "category": "Unassigned", "status": "pending" }
+    ]
+  }
+}
